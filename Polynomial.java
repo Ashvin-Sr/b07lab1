@@ -1,4 +1,6 @@
 import java.io.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class Polynomial{
     double [] coefficients;
@@ -45,27 +47,13 @@ class Polynomial{
 
         String currentDigit = "";
         int val = 1;
-        int traversecoefficent = 0, traversepower = 0, firstoperator = 0, firstx = 0, start = 0;
+        int traversecoefficent = 0, traversepower = 0, firstoperator = 0, firstx = 0;
 
-        if(poly.charAt(0) == '-'){
-            start = 1;
-        }
+        Matcher matcher = Pattern.compile("(?<![x\\d])\\d+[+-]").matcher(poly);
 
-        for (int i = 1; i < 10; i++){
-            firstoperator = poly.indexOf(String.valueOf(i)+"+");
-            if(firstoperator != -1)
-                break;
-        }
-        if(firstoperator == -1){
-            for (int i = 1; i < 10; i++){
-                firstoperator = poly.indexOf(String.valueOf(i)+"-");
-                if(firstoperator != -1)
-                    break;
-            }
-        }
-
-        if(firstoperator != -1){
-            poly = poly.substring(0,firstoperator+1) + "x0" + poly.substring(firstoperator+1, poly.length());
+        if(matcher.find()){
+            int index = matcher.start();
+            poly = poly.substring(0,index+1) + "x0" + poly.substring(index+1, poly.length());
         }
 
         firstoperator = Math.max(poly.indexOf("+x"), poly.indexOf("-x"));
@@ -120,6 +108,7 @@ class Polynomial{
             }
         }
     }
+
     public void saveToFile(String fileName) throws IOException {
         StringBuilder poly = new StringBuilder();
         for(int i = 0; i < powers.length; i++){
