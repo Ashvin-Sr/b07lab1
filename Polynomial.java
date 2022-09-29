@@ -50,11 +50,22 @@ class Polynomial{
         if(poly.charAt(0) == '-'){
             start = 1;
         }
-        firstoperator = Math.min(poly.indexOf("+", start), poly.indexOf("-", start));
-        firstx = poly.indexOf("x", start);
 
-        if(firstoperator < firstx && firstoperator != -1 && firstx != -1){
-            poly = poly.substring(0,firstoperator) + "x0" + poly.substring(firstoperator, poly.length());
+        for (int i = 1; i < 10; i++){
+            firstoperator = poly.indexOf(String.valueOf(i)+"+");
+            if(firstoperator != -1)
+                break;
+        }
+        if(firstoperator == -1){
+            for (int i = 1; i < 10; i++){
+                firstoperator = poly.indexOf(String.valueOf(i)+"-");
+                if(firstoperator != -1)
+                    break;
+            }
+        }
+
+        if(firstoperator != -1){
+            poly = poly.substring(0,firstoperator+1) + "x0" + poly.substring(firstoperator+1, poly.length());
         }
 
         firstoperator = Math.max(poly.indexOf("+x"), poly.indexOf("-x"));
@@ -70,14 +81,15 @@ class Polynomial{
             if(curr == '-') {
                 val = -1;
                 if(currentDigit.length() != 0){
-                    powers[traversepower] = val * Integer.parseInt(currentDigit);
+                    powers[traversepower] = Integer.parseInt(currentDigit);
                     traversepower++;
                 }
+                currentDigit = "";
             }
             else if (curr == '+'){
                 val = 1;
                 if(currentDigit.length() != 0){
-                    powers[traversepower] = val * Integer.parseInt(currentDigit);
+                    powers[traversepower] = Integer.parseInt(currentDigit);
                     traversepower++;
                 }
                 currentDigit = "";
@@ -91,6 +103,20 @@ class Polynomial{
             }
             else{
                 currentDigit = currentDigit + curr;
+            }
+        }
+        int temp = 0;
+        double tempdouble = 0.0;
+        for (int i = 0; i < powers.length - 1; i++){
+            for(int j = 0; j < powers.length - 1; j++){
+                if(powers[j] > powers[j + 1]){
+                    temp = powers[j];
+                    powers[j] = powers[j + 1];
+                    powers[j + 1] = temp;
+                    tempdouble = coefficients[j];
+                    coefficients[j] = coefficients[j + 1];
+                    coefficients[j + 1] = tempdouble;
+                }
             }
         }
     }
