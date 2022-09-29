@@ -52,7 +52,7 @@ class Polynomial{
         Matcher matcher = Pattern.compile("(?<![x\\d])\\d+[+-]").matcher(poly);
 
         if(matcher.find()){
-            int index = matcher.start();
+            int index = matcher.end() - 2;
             poly = poly.substring(0,index+1) + "x0" + poly.substring(index+1, poly.length());
         }
 
